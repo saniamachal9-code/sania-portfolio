@@ -37,11 +37,17 @@ export const PERSONAL_INFO = {
   name: 'Sania',
   fullName: 'Sania Machal',
   tagline: 'Digital Marketer & Creative Tech Builder',
-  location: 'Pundri, Haryana, India',
+  roleLine: 'Digital Marketer | Content Creator | Shayari Poet',
+  location: 'Pundri, Kaithal, Haryana, India',
   email: 'saniamachal9@gmail.com',
   birthYear: 2009,
   currentEducation: 'Undergraduate Degree (Graduation in Progress)',
-  bio: 'A passionate 17-year-old digital marketing strategist, GenAI pioneer, and creative builder from Pundri, Haryana. Blending data-driven performance marketing with cutting-edge AI tools (30+ explored) and real-world web/game engineering to build high-retention digital experiences.',
+  bio: 'A passionate digital marketing strategist, content creator, GenAI pioneer, and creative builder from Pundri, Kaithal (Haryana). Blending data-driven performance marketing with cutting-edge AI tools (30+ explored) and real-world web/game engineering to build high-retention digital experiences.',
+  about: [
+    'College student from Pundri, Kaithal (Haryana), passionate about digital marketing and creative content.',
+    'Running the YouTube channel "Sania Machal" where I share Hindi/Urdu shayari and original creative content.',
+    'Passionate about digital marketing and creative content — building brands, telling stories, and turning ideas into real campaigns.',
+  ],
   stats: [
     { label: 'AI Tools Explored', value: '30+' },
     { label: '10th Board Marks', value: '80%' },
@@ -49,6 +55,45 @@ export const PERSONAL_INFO = {
     { label: 'Real Projects Built', value: '12+' },
   ],
 };
+
+export interface SocialLink {
+  platform: 'YouTube' | 'LinkedIn' | 'Instagram' | 'Email';
+  handle: string;
+  url: string;
+  iconName: 'Youtube' | 'Linkedin' | 'Instagram' | 'Mail';
+  brandColor: string;
+}
+
+export const SOCIAL_LINKS: SocialLink[] = [
+  {
+    platform: 'YouTube',
+    handle: 'Sania Machal',
+    url: 'https://www.youtube.com/@SaniaMachal',
+    iconName: 'Youtube',
+    brandColor: '#ff0000',
+  },
+  {
+    platform: 'LinkedIn',
+    handle: 'Sania Machal',
+    url: 'https://www.linkedin.com/in/saniamachal',
+    iconName: 'Linkedin',
+    brandColor: '#0a66c2',
+  },
+  {
+    platform: 'Instagram',
+    handle: 'Sania Machal',
+    url: 'https://www.instagram.com/saniamachal',
+    iconName: 'Instagram',
+    brandColor: '#e1306c',
+  },
+  {
+    platform: 'Email',
+    handle: 'saniamachal9@gmail.com',
+    url: 'mailto:saniamachal9@gmail.com',
+    iconName: 'Mail',
+    brandColor: '#667eea',
+  },
+];
 
 export const AI_TOOLS_LIST: AiTool[] = [
   // LLMs & Reasoning
@@ -434,6 +479,39 @@ export const PROJECTS_LIST: Project[] = [
     deliverables: ['Meta & Google Ads Setup', 'AI Ad Copywriting & Creatives', 'Landing Page Conversion Strategy', 'Analytics & Lead Tracking'],
     featured: true,
   },
+  {
+    id: 'sania-machal-youtube',
+    title: 'Sania Machal — YouTube Channel',
+    category: 'marketing',
+    subtitle: 'Content Creation Project',
+    description: 'Apna YouTube channel "Sania Machal" chala rahi hoon jahan Hindi/Urdu shayari aur original creative content audience ke saath connect karta hai.',
+    longDescription: 'Sania Machal YouTube channel meri apni creative identity hai. Isme main Hindi/Urdu shayari, original stories aur creative content publish karti hoon. Channel ko thumbnails, SEO titles, aur audience engagement ke through organic reach build karne ka experience hai. Content planning, video editing, aur community engagement mere daily routine ka hissa hain.',
+    image: '/src/assets/images/project_growth_marketing_1790576311257.jpg',
+    tags: ['YouTube', 'Hindi Shayari', 'Urdu Poetry', 'Content Strategy', 'Video SEO', 'Thumbnails'],
+    metrics: [
+      { label: 'Content Niche', value: 'Hindi/Urdu' },
+      { label: 'Focus', value: 'Poetry' },
+      { label: 'Growth', value: 'Organic' },
+    ],
+    deliverables: ['Channel Branding & Identity', 'Hindi/Urdu Shayari Writing', 'Video Editing & Thumbnails', 'YouTube SEO & Audience Growth'],
+    featured: true,
+  },
+  {
+    id: 'content-creation-showreel',
+    title: 'Creative Content Creation',
+    category: 'marketing',
+    subtitle: 'Content Creation Project',
+    description: 'Short-form reels aur social content ka full production — idea se scripting, video editing, captions, aur final delivery tak.',
+    longDescription: 'Content creation meri core strength hai. Main short-form vertical videos (reels/shorts) ke liye idea se scripting, shooting guidance, video editing, auto-captions, aur beat-synced transitions tak poora workflow handle karti hoon. CapCut aur AI voiceover tools ke saath high-retention edits banati hoon jo social platforms par perform karte hain.',
+    image: '/src/assets/images/project_web_studio_1790576325339.jpg',
+    tags: ['Reels & Shorts', 'Video Editing', 'CapCut', 'Auto Captions', 'Scripting', 'AI Voiceover'],
+    metrics: [
+      { label: 'Format', value: 'Vertical' },
+      { label: 'Editing', value: 'CapCut' },
+      { label: 'Captions', value: 'Auto' },
+    ],
+    deliverables: ['Content Ideation & Scripting', 'Vertical Video Editing', 'Auto-Captions & Transitions', 'AI Voiceover Narration'],
+  },
 ];
 
 export const TIMELINE_MILESTONES: Milestone[] = [
@@ -466,7 +544,11 @@ export const TIMELINE_MILESTONES: Milestone[] = [
 export const CORE_SKILLS = [
   {
     category: 'Digital Marketing',
-    items: ['Meta Ads (FB/IG)', 'Google Ads & PPC', 'Conversion Rate (CRO)', 'Full-Funnel ROAS', 'SEO Keywords', 'Lead Generation']
+    items: ['Social Media Marketing', 'Meta Ads (FB/IG)', 'Google Ads & PPC', 'Conversion Rate (CRO)', 'Full-Funnel ROAS', 'SEO Keywords', 'Lead Generation']
+  },
+  {
+    category: 'Content Creation',
+    items: ['YouTube Channel Growth', 'Hindi/Urdu Shayari Writing', 'Video Editing (CapCut)', 'Short-Form Reels & Shorts', 'Thumbnail & Poster Design', 'Scripting & Storyboarding']
   },
   {
     category: 'AI & Generative Tools',
@@ -474,6 +556,6 @@ export const CORE_SKILLS = [
   },
   {
     category: 'Tech & Engineering',
-    items: ['HTML5 Canvas Games', 'JavaScript & TypeScript', 'React & Tailwind CSS', 'Web Performance (99+ Lighthouse)', 'Responsive UX/UI', 'Physics Engines']
+    items: ['HTML & CSS', 'JavaScript & TypeScript', 'React & Tailwind CSS', 'HTML5 Canvas Games', 'Web Performance (99+ Lighthouse)', 'Responsive UX/UI', 'Physics Engines']
   }
 ];

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
-import { Mail, MapPin, Copy, Check, Send, Sparkles, ArrowLeft, MessageSquare, Clock, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Mail, MapPin, Copy, Check, Send, Sparkles, ArrowLeft, MessageSquare, Clock, ShieldCheck, HelpCircle, Youtube, Linkedin, Instagram } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { PERSONAL_INFO } from '../data/portfolioData';
+import { PERSONAL_INFO, SOCIAL_LINKS } from '../data/portfolioData';
+import type { SocialLink } from '../data/portfolioData';
+
+const SOCIAL_ICONS: Record<SocialLink['iconName'], React.ElementType> = {
+  Youtube,
+  Linkedin,
+  Instagram,
+  Mail,
+};
 
 interface ContactPageProps {
   onBackToHome: () => void;
@@ -84,7 +92,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBackToHome }) => {
                   Sania Machal
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Digital Marketing Specialist · AI Explorer (30+ Tools) · Web & Game Creator
+                  Digital Marketer · Content Creator · Shayari Poet
                 </p>
               </div>
 
@@ -115,11 +123,48 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBackToHome }) => {
                 )}
               </div>
 
+              {/* Social Links */}
+              <div className="space-y-2">
+                <div className="text-[10px] font-mono-code text-slate-500 uppercase font-semibold">
+                  Find Me Online
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  {SOCIAL_LINKS.map((link) => {
+                    const Icon = SOCIAL_ICONS[link.iconName];
+                    return (
+                      <a
+                        key={link.platform}
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group inline-flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white border border-slate-200 hover:border-blue-300 hover:shadow-md hover:shadow-blue-500/10 transition-all"
+                        title={link.platform}
+                      >
+                        <span
+                          className="p-1.5 rounded-lg text-white shrink-0 transition-transform group-hover:scale-110"
+                          style={{ backgroundColor: link.brandColor }}
+                        >
+                          <Icon className="w-3.5 h-3.5" />
+                        </span>
+                        <span className="min-w-0">
+                          <span className="block text-[10px] font-mono-code text-slate-400 uppercase leading-none">
+                            {link.platform}
+                          </span>
+                          <span className="block text-xs font-semibold text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+                            {link.handle}
+                          </span>
+                        </span>
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Location & Commitments */}
               <div className="space-y-3 text-xs text-slate-600">
                 <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
-                  <span>Pundri, Haryana, India (IST / UTC+5:30)</span>
+                  <span>Pundri, Kaithal, Haryana, India (IST / UTC+5:30)</span>
                 </div>
                 <div className="flex items-center gap-2.5">
                   <Clock className="w-4 h-4 text-blue-600 shrink-0" />

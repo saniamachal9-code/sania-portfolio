@@ -1,6 +1,6 @@
 import React from 'react';
-import { TIMELINE_MILESTONES, CORE_SKILLS } from '../data/portfolioData';
-import { MapPin, CheckCircle2, User } from 'lucide-react';
+import { TIMELINE_MILESTONES, CORE_SKILLS, PERSONAL_INFO } from '../data/portfolioData';
+import { MapPin, CheckCircle2, User, Sparkles } from 'lucide-react';
 
 export const JourneyTimeline: React.FC = () => {
   return (
@@ -14,11 +14,26 @@ export const JourneyTimeline: React.FC = () => {
             <span>About Sania</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">
-            Journey & Education
+            About Me
           </h2>
-          <p className="text-slate-600 text-xs sm:text-sm max-w-xl">
-            Pundri (Haryana) se shuruwat, school education, aur real tech & digital marketing projects.
+          <p className="text-slate-600 text-xs sm:text-sm max-w-xl leading-relaxed">
+            College student from Pundri, Kaithal (Haryana) — passionate about digital marketing and creative content, running the YouTube channel "Sania Machal" with Hindi/Urdu shayari.
           </p>
+        </div>
+
+        {/* Highlight Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
+          {PERSONAL_INFO.about.map((line, idx) => (
+            <div
+              key={idx}
+              className="card-lift p-5 rounded-2xl bg-gradient-to-br from-white to-blue-50/50 border border-slate-200 flex items-start gap-3"
+            >
+              <span className="p-2 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 text-white shrink-0 shadow-sm shadow-blue-500/25">
+                <Sparkles className="w-4 h-4" />
+              </span>
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">{line}</p>
+            </div>
+          ))}
         </div>
 
         {/* Two-Column Layout */}

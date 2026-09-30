@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProjectsShowcase } from './components/ProjectsShowcase';
@@ -9,12 +10,29 @@ import { ContactPage } from './pages/ContactPage';
 import { Footer } from './components/Footer';
 import { ProjectModal } from './components/ProjectModal';
 import { Project } from './data/portfolioData';
+import { trackPageView } from './lib/analytics';
 import { ArrowRight, BookOpen, Mail } from 'lucide-react';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'blogs' | 'contact'>('home');
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    trackPageView(currentPage);
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (currentPage === 'home') {
+      trackPageView(`home:${activeSection}`);
+    }
+  }, [activeSection, currentPage]);
+
+  useEffect(() => {
+    if (selectedProject) {
+      trackPageView(`project:${selectedProject.id}`);
+    }
+  }, [selectedProject]);
 
   const handleNavigatePage = (page: 'home' | 'blogs' | 'contact', anchorId?: string) => {
     setCurrentPage(page);
@@ -145,6 +163,9 @@ export default function App() {
           onClose={() => setSelectedProject(null)}
         />
       )}
+
+      {/* Privacy-friendly page view analytics (no cookies, no PII) */}
+      <Analytics />
     </div>
   );
 }
