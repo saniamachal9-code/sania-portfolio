@@ -1,0 +1,7 @@
+cronExpressions:
+  - '0 0 1 1 *'  # Every January 1st at 12:00 AM UTC
+
+deployments:
+  actions:
+    - type: git
+      ref: main

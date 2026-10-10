@@ -1,0 +1,9 @@
+# Robots.txt for Sania Machal Portfolio
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sania-portfolio.vercel.app/sitemap.xml
+
+# Host
+Host: https://sania-portfolio.vercel.app

@@ -1,12 +1,63 @@
 @import "tailwindcss";
 
-:root {
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS
+
+   Light is the only theme. An earlier revision also defined a dark palette in
+   `[data-theme="dark"]`, but every section painted hard-coded light colours on
+   top of it, so the toggle in the navbar changed nothing visible. Rather than
+   ship a half-working dark mode, the token names below now hold the light
+   values directly and there is a single palette to keep in sync.
+
+   `inline` makes Tailwind emit var(--token) rather than the resolved value,
+   which is what lets these stay overridable from one place.
+--------------------------------------------------------------------------- */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-brand-soft: var(--brand-soft);
+
   --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-display: 'Outfit', 'Plus Jakarta Sans', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --brand-start: #667eea;
-  --brand-end: #764ba2;
-  --brand-gradient: linear-gradient(135deg, var(--brand-start) 0%, var(--brand-end) 100%);
+
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-soft: pulse-soft 2.4s ease-in-out infinite;
+}
+
+:root {
+  color-scheme: light;
+
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --raised: #f1f3f9;
+  --line: #e2e5ee;
+  --line-soft: #eceef4;
+
+  --ink: #0f172a;
+  --muted: #55607a;
+  --faint: #8b93a7;
+
+  --brand: #5b6ee1;
+  --brand-2: #764ba2;
+  --brand-soft: rgba(91, 110, 225, 0.1);
+
+  /* Motion tokens — every duration/easing in the app reads from here so the
+     mobile and reduced-motion overrides stay a single edit. */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 0.3s;
+  --dur-base: 0.5s;
+  --dur-slow: 0.6s;
+  --reveal-distance: 30px;
 }
 
 html {
@@ -16,8 +67,8 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #f8fafc;
-  color: #0f172a;
+  background-color: var(--bg);
+  color: var(--ink);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,58 +83,431 @@ body {
   font-family: var(--font-mono);
 }
 
-/* Brand gradient utility (used by gradient headers, buttons, accents) */
+/* Brand gradient (#5b6ee1 -> #764ba2) used by headers, buttons and accents */
 .brand-gradient {
-  background-image: var(--brand-gradient);
+  background-image: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
 }
 
 .brand-gradient-text {
-  background-image: var(--brand-gradient);
+  background-image: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
-/* Scroll margin for anchor targets so the sticky navbar never overlaps headings */
+/* Scroll margin so the fixed navbar never covers a section heading */
 section[id] {
   scroll-margin-top: 5.5rem;
 }
 
-/* Smooth card lift used across project/skill cards */
+/* ---------------------------------------------------------------------------
+   KEYFRAMES
+   Only transform and opacity are animated, so every one of these stays on the
+   compositor and never triggers layout or paint.
+--------------------------------------------------------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--reveal-distance) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(var(--reveal-distance));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+/* Brand-tinted halo. Driven by the token so it follows the palette. */
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px color-mix(in srgb, var(--brand) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--brand) 55%, transparent);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   SCROLL REVEALS
+
+   `data-reveal` elements start hidden *only* when `html.js-reveal` is present.
+   The hook adds that class on mount, so if JavaScript never runs the content is
+   simply visible — a failed bundle can never leave the page blank.
+--------------------------------------------------------------------------- */
+[data-reveal] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: var(--dur-slow);
+  transition-timing-function: var(--ease-out);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.js-reveal [data-reveal='up'] {
+  transform: translateY(var(--reveal-distance));
+}
+.js-reveal [data-reveal='left'] {
+  transform: translateX(calc(var(--reveal-distance) * -1));
+}
+.js-reveal [data-reveal='right'] {
+  transform: translateX(var(--reveal-distance));
+}
+.js-reveal [data-reveal='scale'] {
+  transform: scale(0.94);
+}
+
+.js-reveal [data-reveal].is-visible {
+  animation: fadeIn var(--dur-slow) var(--ease-out) var(--reveal-delay, 0s) both;
+}
+.js-reveal [data-reveal='up'].is-visible {
+  animation-name: fadeInDown;
+}
+.js-reveal [data-reveal='left'].is-visible {
+  animation-name: slideInLeft;
+}
+.js-reveal [data-reveal='right'].is-visible {
+  animation-name: slideInRight;
+}
+.js-reveal [data-reveal='scale'].is-visible {
+  animation-name: popIn;
+}
+
+/* Hero plays on load rather than on scroll — it is above the fold, so waiting
+   for an intersection would only add a frame of jank. */
+.animate-on-load {
+  animation: fadeInDown var(--dur-base) var(--ease-out) both;
+  animation-delay: var(--load-delay, 0s);
+}
+
+/* Applied to the staggered children of a revealed container. */
+.js-reveal [data-reveal-stagger].is-visible > * {
+  animation: fadeIn var(--dur-slow) var(--ease-out) both;
+}
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(1) { animation-delay: 0s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(2) { animation-delay: 0.1s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(3) { animation-delay: 0.2s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(4) { animation-delay: 0.3s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(5) { animation-delay: 0.4s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(6) { animation-delay: 0.5s; }
+.js-reveal [data-reveal-stagger].is-visible > *:nth-child(n + 7) { animation-delay: 0.6s; }
+
+/* Ambient decoration — decorative blobs must never eat a pointer event. */
+.ambient-blob {
+  pointer-events: none;
+  will-change: transform;
+  animation: float 9s ease-in-out infinite;
+}
+.ambient-blob-slow {
+  pointer-events: none;
+  animation: float 12s ease-in-out infinite reverse;
+}
+
+/* Entrance fade for modals and overlays.
+   These previously carried `animate-in fade-in`, which needs the
+   `tailwindcss-animate` plugin — it is not a dependency here, so the classes
+   silently did nothing and overlays just appeared. */
+.overlay-fade {
+  animation: fadeIn 0.2s ease-out both;
+}
+
+/* ---------------------------------------------------------------------------
+   HOVER / FOCUS
+--------------------------------------------------------------------------- */
 .card-lift {
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s ease;
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
 }
 
 .card-lift:hover {
   transform: translateY(-6px);
-  box-shadow: 0 22px 48px -18px rgb(59 130 246 / 0.32);
+  box-shadow: 0 22px 48px -20px color-mix(in srgb, var(--brand) 45%, transparent);
 }
 
-/* Respect users who prefer reduced motion */
+/* Project cards get the scale treatment on top of the shared lift. */
+.card-scale {
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) ease;
+}
+.card-scale:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 26px 54px -22px color-mix(in srgb, var(--brand) 55%, transparent);
+}
+
+/* Soft halo behind a thumbnail while its card is hovered. */
+.glow-hover {
+  transition: filter var(--dur-fast) ease, box-shadow var(--dur-fast) ease;
+}
+.card-scale:hover .glow-hover,
+.group:hover .glow-hover {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.btn-primary {
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) ease;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px -12px color-mix(in srgb, var(--brand) 70%, transparent);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  transition: transform var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+.btn-ghost:hover {
+  transform: translateY(-2px);
+}
+
+/* Underline wipes in from the left on hover instead of snapping on. */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+.link-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  height: 1.5px;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background-color: currentColor;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Frosted panel used by the fixed navbar, modals and the settings overlay */
+.glass {
+  background-color: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* Thin gradient hairline between sections */
+.hairline {
+  background-image: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--brand) 45%, transparent),
+    transparent
+  );
+}
+
+/* Visible keyboard focus everywhere — the old styles removed outlines outright. */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Form controls need explicit colours or they render near-invisible */
+input,
+textarea,
+select {
+  background-color: var(--raised);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--faint);
+}
+
+/* Scrollbar, themed for the light default */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--brand) 55%, transparent);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand);
+}
+
+::selection {
+  background-color: var(--brand);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   RESPONSIVE + REDUCED MOTION
+
+   Phones get shorter travel and shorter durations — a 30px slide across a
+   360px viewport reads as a glitch rather than as motion.
+--------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  :root {
+    --reveal-distance: 16px;
+    --dur-base: 0.4s;
+    --dur-slow: 0.4s;
+  }
+
+  .card-lift:hover,
+  .card-scale:hover,
+  .btn-primary:hover,
+  .btn-ghost:hover {
+    transform: none;
+  }
+}
+
+/* The in-app "reduce motion" switch sets `.reduce-motion` on <html>, and it has
+   to neutralise reveals even when the OS preference is not set — otherwise the
+   observer would park those elements at opacity 0 forever. */
+html.reduce-motion {
+  scroll-behavior: auto;
+}
+
+html.reduce-motion [data-reveal],
+html.reduce-motion [data-reveal-stagger] > * {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
   .card-lift,
-  .card-lift:hover {
+  .card-lift:hover,
+  .card-scale,
+  .card-scale:hover {
     transform: none;
-    transition: none;
+  }
+
+  /* Reveal elements must not be left stranded at opacity 0. */
+  [data-reveal],
+  .js-reveal [data-reveal],
+  .js-reveal [data-reveal-stagger] > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .ambient-blob,
+  .ambient-blob-slow {
+    animation: none;
   }
 }
 
-/* Custom scrollbar in White & Blue */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-::-webkit-scrollbar-thumb {
-  background: #93c5fd;
+/* ---------------------------------------------------------------------------
+   YEAR BADGE
+--------------------------------------------------------------------------- */
+.year-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-2) 100%);
+  color: white;
+  padding: 4px 14px;
   border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+
+@media (max-width: 640px) {
+  .year-badge {
+    display: block;
+    margin-top: 8px;
+    width: fit-content;
+  }
 }

@@ -115,19 +115,19 @@ export const AiToolsMatrix: React.FC = () => {
   };
 
   return (
-    <section id="skills" className="py-16 border-t border-slate-200 bg-[#f8fafc] relative">
+    <div className="mt-10 pt-10 border-t border-slate-200">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-4" data-reveal="left">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full font-bold">
-              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" aria-hidden="true" />
               <span>30+ AI Tools With Photos</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">
-              Skills & AI Tools Explorer
-            </h2>
+            <h3 className="text-2xl sm:text-3xl font-display font-black text-slate-900 tracking-tight">
+              AI Tools Explorer
+            </h3>
             <p className="text-slate-600 text-xs sm:text-sm max-w-xl">
               Copywriting, Design, Video aur Coding ke sabhi 30+ AI tools ke official photos aur practical workflows.
             </p>
@@ -145,7 +145,7 @@ export const AiToolsMatrix: React.FC = () => {
 
         {/* Spotlight Banner if selected */}
         {spotlightTool && (
-          <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-white border-2 border-blue-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm animate-in fade-in">
+          <div className="mb-8 p-4 sm:p-5 rounded-2xl bg-white border-2 border-blue-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm overlay-fade">
             <div className="flex items-center gap-3.5">
               <ToolLogo tool={spotlightTool} size="lg" />
               <div className="space-y-0.5">
@@ -153,9 +153,11 @@ export const AiToolsMatrix: React.FC = () => {
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Spotlight Tool · {spotlightTool.category}</span>
                 </div>
-                <h4 className="text-lg font-display font-black text-slate-900">
+                {/* H3 — the nearest heading ancestor is the section's H2; the
+                    "AI Tools Explorer" H3 above is a sibling, not a parent. */}
+                <h3 className="text-lg font-display font-black text-slate-900">
                   {spotlightTool.name}
-                </h4>
+                </h3>
                 <p className="text-xs text-slate-600">
                   <span className="text-blue-700 font-semibold">Favorite Workflow:</span> {spotlightTool.favoriteWorkflow}
                 </p>
@@ -212,11 +214,11 @@ export const AiToolsMatrix: React.FC = () => {
         </div>
 
         {/* Tools Grid with Photos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" data-reveal-stagger>
           {filteredTools.map((tool) => (
             <div
               key={tool.name}
-              className="p-4 sm:p-5 rounded-xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between space-y-3 group"
+              className="card-lift p-4 sm:p-5 rounded-xl bg-white border border-slate-200 hover:border-blue-400 flex flex-col justify-between space-y-3 group"
             >
               <div className="space-y-2.5">
                 <div className="flex items-start justify-between gap-3">
@@ -225,9 +227,9 @@ export const AiToolsMatrix: React.FC = () => {
                     <ToolLogo tool={tool} size="md" />
 
                     <div>
-                      <h4 className="font-display font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      <h3 className="font-display font-bold text-sm text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
                         {tool.name}
-                      </h4>
+                      </h3>
                       <div className="text-[11px] text-slate-500 font-mono-code mt-0.5">
                         {tool.category}
                       </div>
@@ -254,6 +256,6 @@ export const AiToolsMatrix: React.FC = () => {
         </div>
 
       </div>
-    </section>
+    </div>
   );
 };

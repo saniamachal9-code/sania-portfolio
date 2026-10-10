@@ -1,7 +1,7 @@
 import React from 'react';
-import { ArrowUp, Mail, Heart, Youtube, Linkedin, Instagram } from 'lucide-react';
+import { ArrowUp, Mail, Lock, Youtube, Linkedin, Instagram } from 'lucide-react';
 import { PERSONAL_INFO, SOCIAL_LINKS } from '../data/portfolioData';
-import { trackSocialClick } from '../lib/analytics';
+import { trackSocialClick, trackEvent } from '../lib/analytics';
 import type { SocialLink } from '../data/portfolioData';
 
 const SOCIAL_ICONS: Record<SocialLink['iconName'], React.ElementType> = {
@@ -11,11 +11,23 @@ const SOCIAL_ICONS: Record<SocialLink['iconName'], React.ElementType> = {
   Mail,
 };
 
+const FOOTER_LINKS = [
+  { label: 'Home', anchor: 'hero' },
+  { label: 'Dashboard', anchor: 'dashboard' },
+  { label: 'Projects', anchor: 'projects' },
+  { label: 'About Me', anchor: 'about' },
+  { label: 'Journey', anchor: 'journey' },
+  { label: 'Capabilities', anchor: 'capabilities' },
+  { label: 'Blogs', anchor: 'blogs' },
+  { label: 'Vision', anchor: 'vision' },
+];
+
 interface FooterProps {
-  onNavigatePage: (page: 'home' | 'blogs' | 'contact', anchorId?: string) => void;
+  onNavigateSection: (anchorId: string) => void;
+  onOpenSettings: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onNavigatePage }) => {
+export const Footer: React.FC<FooterProps> = ({ onNavigateSection, onOpenSettings }) => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -23,7 +35,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigatePage }) => {
   return (
     <footer className="py-12 border-t border-slate-200 bg-white text-slate-500 text-xs">
       <div className="max-w-6xl mx-auto px-6 sm:px-8 space-y-8">
-        
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand & Origin */}
           <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left">
@@ -37,43 +49,16 @@ export const Footer: React.FC<FooterProps> = ({ onNavigatePage }) => {
           </div>
 
           {/* Quick Nav Links */}
-          <div className="flex flex-wrap items-center justify-center gap-5 text-slate-600 font-medium">
-            <button
-              onClick={() => onNavigatePage('home', 'hero')}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              Home
-            </button>
-            <button
-              onClick={() => onNavigatePage('home', 'about')}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              About Me
-            </button>
-            <button
-              onClick={() => onNavigatePage('home', 'skills')}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              Skills
-            </button>
-            <button
-              onClick={() => onNavigatePage('home', 'projects')}
-              className="hover:text-blue-600 transition-colors cursor-pointer"
-            >
-              My Projects
-            </button>
-            <button
-              onClick={() => onNavigatePage('blogs')}
-              className="hover:text-blue-600 transition-colors cursor-pointer text-blue-600 font-semibold"
-            >
-              Blogs Page
-            </button>
-            <button
-              onClick={() => onNavigatePage('contact')}
-              className="hover:text-blue-600 transition-colors cursor-pointer text-blue-600 font-semibold"
-            >
-              Contact Page
-            </button>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-slate-600 font-medium">
+            {FOOTER_LINKS.map((link) => (
+              <button
+                key={link.anchor}
+                onClick={() => onNavigateSection(link.anchor)}
+                className="link-underline hover:text-blue-600 transition-colors cursor-pointer"
+              >
+                {link.label}
+              </button>
+            ))}
           </div>
 
           {/* Contact, Social & Back to Top */}
@@ -119,7 +104,21 @@ export const Footer: React.FC<FooterProps> = ({ onNavigatePage }) => {
         {/* Bottom Note */}
         <div className="pt-6 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between text-[11px] text-slate-400 gap-2">
           <span>Digital Marketer · Content Creator · Shayari Poet — Pundri, Kaithal, Haryana.</span>
-          <span>© 2026 Sania Machal. All rights reserved.</span>
+          <div className="flex items-center gap-3">
+            <span>© 2026 Sania Machal. All rights reserved.</span>
+            {/* Discreet owner-only entry point to the Settings panel */}
+            <button
+              onClick={() => {
+                trackEvent('settings_lock_clicked');
+                onOpenSettings();
+              }}
+              className="p-1.5 rounded-md text-slate-300 hover:text-blue-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              aria-label="Owner settings"
+              title="Owner settings"
+            >
+              <Lock className="w-3 h-3" />
+            </button>
+          </div>
         </div>
 
       </div>

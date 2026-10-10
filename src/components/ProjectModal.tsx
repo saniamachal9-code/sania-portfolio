@@ -19,7 +19,7 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
   if (!project) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm overlay-fade">
       <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-white border border-slate-200 rounded-2xl shadow-2xl flex flex-col">
         
         {/* Top Bar with Close Button */}
@@ -73,9 +73,11 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, onClose }) 
 
           {/* Key Deliverables */}
           <div className="space-y-2">
-            <h4 className="font-display font-bold text-xs text-slate-800 uppercase tracking-wider">
-              Key Features & Deliverables:
-            </h4>
+            {/* H3, not H4 — the modal's H2 is its direct parent, so an H4 here
+                would skip a level. */}
+            <h3 className="font-display font-bold text-xs text-slate-800 uppercase tracking-wider">
+              Key Features &amp; Deliverables:
+            </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-600">
               {project.deliverables.map((deliv, idx) => (
                 <div key={idx} className="flex items-center gap-2">

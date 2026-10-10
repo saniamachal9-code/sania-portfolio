@@ -1,134 +1,155 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight, Sparkles } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Languages } from 'lucide-react';
+import { usePreferences } from '../lib/preferences';
+import { useT, type StringKey } from '../lib/i18n';
 
-interface NavbarProps {
-  currentPage: 'home' | 'blogs' | 'contact';
-  onNavigatePage: (page: 'home' | 'blogs' | 'contact', anchorId?: string) => void;
-  activeSection?: string;
+interface NavItem {
+  id: string;
+  anchor: string;
+  labelKey: StringKey;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigatePage, activeSection }) => {
+/** Mirrors the page order defined in App.tsx. */
+const NAV_ITEMS: NavItem[] = [
+  { id: 'dashboard', anchor: 'dashboard', labelKey: 'nav.dashboard' },
+  { id: 'projects', anchor: 'projects', labelKey: 'nav.projects' },
+  { id: 'hero', anchor: 'hero', labelKey: 'nav.hero' },
+  { id: 'about', anchor: 'about', labelKey: 'nav.about' },
+  { id: 'journey', anchor: 'journey', labelKey: 'nav.journey' },
+  { id: 'capabilities', anchor: 'capabilities', labelKey: 'nav.capabilities' },
+  { id: 'vision', anchor: 'vision', labelKey: 'nav.vision' },
+  { id: 'blogs', anchor: 'blogs', labelKey: 'nav.blogs' },
+  { id: 'settings', anchor: 'settings', labelKey: 'nav.settings' },
+];
+
+interface NavbarProps {
+  activeSection?: string;
+  onNavigateSection: (anchorId: string) => void;
+  onOpenContact: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ activeSection, onNavigateSection }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setPref } = usePreferences();
+  const t = useT();
 
-  const navItems = [
-    { id: 'home', label: 'Home', page: 'home', anchor: 'hero' },
-    { id: 'about', label: 'About Me', page: 'home', anchor: 'about' },
-    { id: 'skills', label: 'Skills', page: 'home', anchor: 'skills' },
-    { id: 'projects', label: 'My Projects', page: 'home', anchor: 'projects' },
-    { id: 'blogs', label: 'Blogs', page: 'blogs' },
-    { id: 'contact', label: 'Contact', page: 'contact' },
-  ];
+  const isItemActive = (item: NavItem) => activeSection === item.anchor;
 
-  const handleItemClick = (item: typeof navItems[0]) => {
-    onNavigatePage(item.page as 'home' | 'blogs' | 'contact', item.anchor);
+  const handleItemClick = (anchor: string) => {
+    onNavigateSection(anchor);
     setMobileMenuOpen(false);
   };
 
-  const isItemActive = (item: typeof navItems[0]) => {
-    if (currentPage === 'blogs') return item.id === 'blogs';
-    if (currentPage === 'contact') return item.id === 'contact';
-    if (currentPage === 'home') {
-      if (item.page === 'home' && activeSection === item.anchor) return true;
-      if (item.id === 'home' && (!activeSection || activeSection === 'hero')) return true;
-    }
-    return false;
-  };
-
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-md border-b-2 border-blue-100 shadow-md shadow-blue-500/5 py-3.5">
-      <div className="max-w-6xl mx-auto px-6 sm:px-8 flex items-center justify-between">
-        
-        {/* Brand Logo & Name */}
+    <header className="fixed top-0 left-0 right-0 z-50 brand-gradient shadow-lg shadow-black/20">
+      <div className="max-w-6xl mx-auto px-6 sm:px-8 py-3 flex items-center justify-between gap-4">
+
+        {/* Brand */}
         <button
-          onClick={() => onNavigatePage('home', 'hero')}
-          className="flex items-center gap-2 group cursor-pointer text-left"
+          onClick={() => handleItemClick('dashboard')}
+          className="flex items-center gap-2.5 group cursor-pointer text-left shrink-0"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur border border-white/25 flex items-center justify-center text-white font-extrabold text-sm group-hover:scale-105 transition-transform">
             S
           </div>
           <div>
-            <div className="font-display text-lg font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
+            <div className="font-display text-base font-black tracking-tight text-white leading-none">
               SANIA MACHAL
             </div>
-            <div className="text-[10px] font-mono-code bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent uppercase font-semibold tracking-wider">
+            <div className="text-[9px] font-mono-code text-white/70 uppercase font-semibold tracking-wider mt-0.5">
               Pundri, Kaithal
             </div>
           </div>
         </button>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden lg:flex items-center gap-1.5 p-1 bg-slate-100/80 rounded-xl border border-slate-200/80">
-          {navItems.map((item) => {
+        {/* Desktop links */}
+        <nav className="hidden xl:flex items-center gap-0.5 p-1 bg-black/15 rounded-xl border border-white/10">
+          {NAV_ITEMS.map((item) => {
             const active = isItemActive(item);
             return (
               <button
                 key={item.id}
-                onClick={() => handleItemClick(item)}
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
+                onClick={() => handleItemClick(item.anchor)}
+                className={`px-2.5 py-1.5 text-[11px] font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                   active
-                    ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow-sm shadow-blue-500/30'
-                    : 'text-slate-700 hover:text-blue-700 hover:bg-white'
+                    ? 'bg-white text-brand shadow-sm'
+                    : 'text-white/80 hover:text-white hover:bg-white/10'
                 }`}
               >
-                {item.label}
+                {t(item.labelKey)}
               </button>
             );
           })}
         </nav>
 
-        {/* Desktop Action CTA */}
-        <div className="flex items-center gap-3">
+        {/* Right controls */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Language toggle */}
           <button
-            onClick={() => onNavigatePage('contact')}
-            className={`hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer whitespace-nowrap ${
-              currentPage === 'contact'
+            onClick={() => setPref('language', language === 'en' ? 'hi' : 'en')}
+            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-white/90 hover:text-white rounded-lg bg-black/15 border border-white/15 hover:bg-black/25 transition-colors cursor-pointer"
+            title={language === 'en' ? 'Switch to Hindi' : 'Switch to English'}
+            aria-label="Toggle language"
+          >
+            <Languages className="w-3.5 h-3.5" />
+            <span className="font-mono-code">{language === 'en' ? 'HI' : 'EN'}</span>
+          </button>
+
+          {/* CTA */}
+          <button
+            onClick={() => handleItemClick('contact')}
+            className={`hidden md:inline-flex items-center gap-1.5 px-3.5 py-2 text-[11px] font-bold uppercase tracking-wider rounded-lg btn-primary cursor-pointer whitespace-nowrap ${
+              activeSection === 'contact'
                 ? 'bg-slate-900 text-white'
-                : 'text-white bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:opacity-90 shadow-md shadow-blue-500/25'
+                : 'bg-white text-brand hover:bg-white/90 shadow-sm'
             }`}
           >
-            <span>Let's Talk</span>
+            <span>{t('nav.talk')}</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </button>
 
-          {/* Mobile hamburger toggle */}
+          {/* Mobile toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 text-slate-700 hover:text-blue-600 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors cursor-pointer"
-            aria-label="Toggle Menu"
+            className="xl:hidden p-2 text-white rounded-lg border border-white/20 bg-black/15 hover:bg-black/25 transition-colors cursor-pointer"
+            aria-label={t('nav.menu')}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 text-blue-600" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
         </div>
       </div>
 
       {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-t border-slate-200 px-6 py-4 space-y-2 shadow-xl animate-in slide-in-from-top-2">
-          {navItems.map((item) => {
+        <div className="xl:hidden bg-slate-900 border-t border-white/10 px-6 py-4 space-y-1.5 max-h-[75vh] overflow-y-auto">
+          {NAV_ITEMS.map((item) => {
             const active = isItemActive(item);
             return (
               <button
                 key={item.id}
-                onClick={() => handleItemClick(item)}
-                className={`block w-full text-left px-3 py-2 text-sm font-semibold rounded-lg transition-colors cursor-pointer ${
-                  active
-                    ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                    : 'text-slate-700 hover:text-blue-600 hover:bg-slate-50'
+                onClick={() => handleItemClick(item.anchor)}
+                className={`block w-full text-left px-3 py-2.5 text-sm font-semibold rounded-lg transition-colors cursor-pointer ${
+                  active ? 'brand-gradient text-white' : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {item.label}
+                {t(item.labelKey)}
               </button>
             );
           })}
+          <div className="flex gap-2 pt-3 sm:hidden">
+            <button
+              onClick={() => setPref('language', language === 'en' ? 'hi' : 'en')}
+              className="flex-1 px-3 py-2.5 text-xs font-bold text-white/90 rounded-lg bg-black/20 border border-white/15 flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Languages className="w-3.5 h-3.5" />
+              <span>{language === 'en' ? 'हिन्दी' : 'English'}</span>
+            </button>
+          </div>
           <button
-            onClick={() => {
-              onNavigatePage('contact');
-              setMobileMenuOpen(false);
-            }}
-            className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md shadow-blue-500/25 cursor-pointer"
+            onClick={() => handleItemClick('contact')}
+            className="w-full mt-1 px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-brand bg-white rounded-lg cursor-pointer"
           >
-            <span>Let's Talk (Contact Page)</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
+            {t('nav.talk')}
           </button>
         </div>
       )}

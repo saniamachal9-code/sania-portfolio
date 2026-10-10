@@ -37,13 +37,13 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-20 border-t border-slate-200 bg-[#f8fafc] relative">
+    <section id="contact" className="py-20 border-t border-slate-200 bg-slate-50 relative">
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
-        
+
         {/* Section Header */}
-        <div className="space-y-2 mb-12 text-center max-w-xl mx-auto">
+        <div className="space-y-2 mb-12 text-center max-w-xl mx-auto" data-reveal="up">
           <div className="inline-flex items-center gap-2 text-xs font-mono-code uppercase tracking-wider text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full">
-            <Mail className="w-3.5 h-3.5 text-blue-600" />
+            <Mail className="w-3.5 h-3.5 text-blue-600" aria-hidden="true" />
             <span>Contact Sania</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-display font-extrabold text-slate-900 tracking-tight">
@@ -58,8 +58,8 @@ export const ContactSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start max-w-4xl mx-auto">
           
           {/* Direct Details Card (Left - 5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="p-6 rounded-2xl bg-white border border-slate-200 space-y-5 shadow-xs">
+          <div className="lg:col-span-5 space-y-4" data-reveal="left">
+            <div className="card-lift p-6 rounded-2xl bg-white border border-slate-200 space-y-5 shadow-xs">
               
               <div className="space-y-1">
                 <div className="text-xs font-mono-code text-blue-600 uppercase font-semibold">
@@ -103,11 +103,11 @@ export const ContactSection: React.FC = () => {
               {/* Location & Guarantee */}
               <div className="space-y-2.5 text-xs text-slate-600">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-blue-600 shrink-0" />
+                  <MapPin className="w-4 h-4 text-blue-600 shrink-0" aria-hidden="true" />
                   <span>Pundri, Haryana, India</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-blue-600 shrink-0" />
+                  <Sparkles className="w-4 h-4 text-blue-600 shrink-0" aria-hidden="true" />
                   <span>Quick response within 24 hours</span>
                 </div>
               </div>
@@ -115,9 +115,9 @@ export const ContactSection: React.FC = () => {
               {/* Direct Mail Button */}
               <a
                 href={`mailto:${PERSONAL_INFO.email}?subject=Inquiry%20from%20Portfolio`}
-                className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-all cursor-pointer shadow-sm shadow-blue-500/20"
+                className="btn-primary w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 rounded-lg cursor-pointer shadow-sm shadow-blue-500/20"
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4" aria-hidden="true" />
                 <span>Open in Mail App</span>
               </a>
 
@@ -125,7 +125,7 @@ export const ContactSection: React.FC = () => {
           </div>
 
           {/* Message Form (Right - 7 cols) */}
-          <div className="lg:col-span-7 p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+          <div className="lg:col-span-7 p-6 rounded-2xl bg-white border border-slate-200 shadow-xs" data-reveal="right">
             {submitted ? (
               <div className="py-10 text-center space-y-3">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto border border-emerald-200">
@@ -213,14 +213,14 @@ export const ContactSection: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-500/20"
+                  className="btn-primary w-full py-2.5 px-4 text-xs font-semibold uppercase tracking-wider text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 rounded-lg flex items-center justify-center gap-2 cursor-pointer shadow-md shadow-blue-500/20"
                 >
                   {isSubmitting ? (
                     <span>Sending...</span>
                   ) : (
                     <>
                       <span>Send Message</span>
-                      <Send className="w-3.5 h-3.5" />
+                      <Send className="w-3.5 h-3.5" aria-hidden="true" />
                     </>
                   )}
                 </button>
