@@ -43,15 +43,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigatePage, act
           onClick={() => onNavigatePage('home', 'hero')}
           className="flex items-center gap-2 group cursor-pointer text-left"
         >
-          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#667eea] to-[#764ba2] flex items-center justify-center text-white font-extrabold text-sm shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
             S
           </div>
           <div>
             <div className="font-display text-lg font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors">
               SANIA MACHAL
             </div>
-            <div className="text-[10px] font-mono-code text-blue-600 uppercase font-semibold tracking-wider">
-              Pundri, Haryana
+            <div className="text-[10px] font-mono-code bg-gradient-to-r from-[#667eea] to-[#764ba2] bg-clip-text text-transparent uppercase font-semibold tracking-wider">
+              Pundri, Kaithal
             </div>
           </div>
         </button>
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigatePage, act
                 onClick={() => handleItemClick(item)}
                 className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                   active
-                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/30'
+                    ? 'bg-gradient-to-r from-[#667eea] to-[#764ba2] text-white shadow-sm shadow-blue-500/30'
                     : 'text-slate-700 hover:text-blue-700 hover:bg-white'
                 }`}
               >
@@ -83,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigatePage, act
             className={`hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold uppercase tracking-wider rounded-lg transition-all cursor-pointer whitespace-nowrap ${
               currentPage === 'contact'
                 ? 'bg-slate-900 text-white'
-                : 'text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/25'
+                : 'text-white bg-gradient-to-r from-[#667eea] to-[#764ba2] hover:opacity-90 shadow-md shadow-blue-500/25'
             }`}
           >
             <span>Let's Talk</span>

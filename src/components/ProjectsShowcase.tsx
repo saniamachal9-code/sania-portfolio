@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PROJECTS_LIST, Project } from '../data/portfolioData';
+import { trackEvent, trackProjectOpen } from '../lib/analytics';
 import { ArrowUpRight, Sparkles, Layers } from 'lucide-react';
 
 interface ProjectsShowcaseProps {
@@ -13,7 +14,7 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ onSelectProj
     { id: 'all', label: 'All Projects' },
     { id: 'games', label: 'Games' },
     { id: 'websites', label: 'Websites' },
-    { id: 'marketing', label: 'Digital Marketing' },
+    { id: 'marketing', label: 'Marketing & Content' },
   ];
 
   const filteredProjects = activeFilter === 'all'
@@ -32,10 +33,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ onSelectProj
               <span>Real Work</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-display font-black text-slate-900 tracking-tight">
-              My Games & Websites
+              My Projects & Campaigns
             </h2>
             <p className="text-slate-600 text-xs sm:text-sm">
-              Real projects built with code, responsive design, and growth strategy.
+              YouTube channel, digital marketing campaigns, games and responsive websites.
             </p>
           </div>
 
@@ -44,7 +45,10 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ onSelectProj
             {filterOptions.map((opt) => (
               <button
                 key={opt.id}
-                onClick={() => setActiveFilter(opt.id as typeof activeFilter)}
+                onClick={() => {
+                  setActiveFilter(opt.id as typeof activeFilter);
+                  trackEvent('project_filter', { filter: opt.id });
+                }}
                 className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all cursor-pointer ${
                   activeFilter === opt.id
                     ? 'bg-blue-600 text-white font-semibold shadow-xs'
@@ -62,8 +66,11 @@ export const ProjectsShowcase: React.FC<ProjectsShowcaseProps> = ({ onSelectProj
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              onClick={() => onSelectProject(project)}
-              className="group rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer shadow-xs"
+              onClick={() => {
+                trackProjectOpen(project.id, project.category);
+                onSelectProject(project);
+              }}
+              className="group card-lift rounded-2xl bg-white border border-slate-200 hover:border-blue-400 flex flex-col justify-between overflow-hidden cursor-pointer shadow-xs"
             >
               {/* Image Preview */}
               <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
