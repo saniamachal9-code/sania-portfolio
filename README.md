@@ -1,20 +1,32 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# 👋 Sania Machal | Portfolio
 
-# Run and deploy your AI Studio app
+Portfolio of **Sania Machal**, a Digital Marketer, Content Creator and Shayari Poet from Pundri, Haryana.
 
-This contains everything you need to run your app locally.
+🌐 **Live:** [sania-portfolio-eta.vercel.app](https://sania-portfolio-eta.vercel.app)
 
-View your app in AI Studio: https://ai.studio/apps/751af94c-c4f1-4ab0-86ea-337a8a123d06
+## ✨ Features
 
-## Run Locally
+- Clean, responsive design
+- Visitor analytics with Supabase
+- SEO optimized
+- Links to my Hindi/Urdu shayari YouTube channel
 
-**Prerequisites:**  Node.js
+## 🛠️ Tech Stack
 
+Vite · TypeScript · Supabase · Vercel
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🚀 Run Locally
+
+```bash
+git clone https://github.com/saniamachal9-code/sania-portfolio.git
+cd sania-portfolio
+npm install
+npm run dev
+```
+
+Copy `.env.example` to `.env` and add your Supabase keys.
+
+## 📬 Contact
+
+**Sania Machal**
+GitHub: [@saniamachal9-code](https://github.com/saniamachal9-code) · LinkedIn: [Sania Machal](https://www.linkedin.com/in/sania-machal-608b71439)
