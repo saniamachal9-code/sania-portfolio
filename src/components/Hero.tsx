@@ -1,7 +1,6 @@
 import React from 'react';
 import { MapPin, Award, ArrowRight } from 'lucide-react';
 import { trackCtaClick } from '../lib/analytics';
-import portrait from '../assets/images/sania_portrait_2026.jpg';
 import { YearBadge } from './YearBadge';
 
 interface HeroProps {
@@ -130,12 +129,13 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onNavigateToContact }) =
                     the same `transform`. */}
                 <div className="relative aspect-[4/5] rounded-xl overflow-hidden bg-slate-100 group animate-float">
                   <img
-                    src={portrait}
-                    alt="Portrait of Sania Machal, digital marketer and content creator from Pundri, Kaithal"
+                    src="/sania-machal.jpg"
+                    alt="Sania Machal - Digital Marketer, Content Creator and Shayari Poet"
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                    width={640}
-                    height={800}
+                    width={720}
+                    height={720}
                     fetchPriority="high"
+                    loading="eager"
                     decoding="async"
                   />
                   <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-900/40 to-transparent pointer-events-none" />

@@ -2,8 +2,15 @@
 User-agent: *
 Allow: /
 
+# Allow crawlers to fetch the profile photo and other images for Google Images
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+Allow: /*.avif$
+
 # Sitemap
-Sitemap: https://sania-portfolio.vercel.app/sitemap.xml
+Sitemap: https://sania-portfolio-eta.vercel.app/sitemap.xml
 
 # Host
-Host: https://sania-portfolio.vercel.app
+Host: https://sania-portfolio-eta.vercel.app
